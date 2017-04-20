@@ -75,9 +75,6 @@ pre {
 	right: 1em;
 	line-height: 2.5;
 }
-.rendered {
-	display: none;
-}
 .match {
 	background-color: red;
 }

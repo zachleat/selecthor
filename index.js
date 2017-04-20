@@ -1,36 +1,51 @@
-var $target = document.getElementById( "import-target" );
-var $rendered = document.getElementById( "import-rendered" );
+function Selecthor( targetEl ) {
+	// this is where the source code is rendered to, the syntax highlighted element
+	this.target = targetEl;
+	this.rendered = document.createElement( "div" );
 
-function setHtml( html ) {
-	var escape = document.createElement( "textarea" );
-	escape.textContent = html;
-
-	$target.innerHTML = escape.innerHTML;
-
-	hljs.highlightBlock( $target );
-
-	$rendered.innerHTML = html;
-
-	sync();
+	this.classes = {
+		match: "match"
+	};
+	this.i18n = {
+		match: {
+			singular: "match",
+			plural: "matches"
+		}
+	};
 }
 
-function getHtml( url ) {
-	fetch( URL )
+Selecthor.prototype.fetch = function( url ) {
+	return fetch( url )
 		.then(function (response) {
 			return response.text();
 		}).then(function (text) {
-			setHtml( text );
-		}).catch(function( error ) {
+			this.setHtml( text );
+		}.bind( this )).catch(function( error ) {
 			console.error( 'Looks like there was a problem. ', error );
 		});
-}
+};
 
-function sync() {
+Selecthor.prototype.escapeHtml = function( html ) {
+	var escape = document.createElement( "textarea" );
+	escape.textContent = html;
+
+	return escape.innerHTML;
+};
+
+Selecthor.prototype.setHtml = function( html ) {
+	this.target.innerHTML = this.escapeHtml( html );
+	hljs.highlightBlock( this.target );
+
+	this.rendered.innerHTML = html;
+	this.sync();
+};
+
+Selecthor.prototype.sync = function() {
 	var opened = -1;
 	var unclosed = [];
 	var lastNode;
 
-	$target.querySelectorAll( ".hljs-tag" ).forEach(function( node ) {
+	this.target.querySelectorAll( ".hljs-tag" ).forEach(function( node ) {
 		if( node.textContent.indexOf( "</" ) === -1 ) {
 			opened++;
 			unclosed.push( opened );
@@ -44,45 +59,59 @@ function sync() {
 	});
 
 	var index = 0;
-	$rendered.querySelectorAll( "*" ).forEach(function( node ) {
+	this.rendered.querySelectorAll( "*" ).forEach(function( node ) {
 		node.setAttribute( "data-tagindex", index++ );
 	});
-}
+};
 
-function selectNodes( value ) {
-	document.querySelectorAll( ".match" ).forEach(function( node ) {
-		node.classList.remove( "match" );
-	});
+Selecthor.prototype.reset = function() {
+	document.querySelectorAll( "." + this.classes.match ).forEach(function( node ) {
+		node.classList.remove( this.classes.match );
+	}.bind( this ));
+};
 
+Selecthor.prototype.setTagIndeces = function( selector ) {
 	var matchCount = 0;
-	if( value ) {
+	if( selector ) {
 		try {
 			var matches = [];
-			$rendered.querySelectorAll( value ).forEach(function( node ) {
+			this.rendered.querySelectorAll( selector ).forEach(function( node ) {
 				matches.push( "[data-tagindex='" + node.getAttribute( "data-tagindex" ) + "']" );
-				$target.querySelectorAll( matches.join( "," ) ).forEach(function( highlightedNode ) {
-					highlightedNode.classList.add( "match" );
-				});
+				this.target.querySelectorAll( matches.join( "," ) ).forEach(function( highlightedNode ) {
+					highlightedNode.classList.add( this.classes.match );
+				}.bind( this ));
 				matchCount++;
-				node.classList.add( "match" );
-			});
+				node.classList.add( this.classes.match );
+			}.bind( this ));
 
 		} catch( e ) {
 			// uhhh
 		}
 	}
+	return matchCount;
+};
 
+Selecthor.prototype.updateCount = function( count ) {
 	// update count
-	document.getElementById( "selector-count" ).innerHTML = matchCount + " match" + ( matchCount !== 1 ? "es" : "" );
-}
+	document.getElementById( "selector-count" ).innerHTML = count + " " + ( count !== 1 ? this.i18n.match.plural : this.i18n.match.singular );
+};
 
-document.getElementById( "selector-input" ).addEventListener( "input", function( e ) {
-	selectNodes( e.target.value );
-}, false );
+Selecthor.prototype.select = function( selector ) {
+	this.reset();
 
+	var count = this.setTagIndeces( selector );
+	this.updateCount( count );
+};
+
+// Wrap source code checkbox
 document.getElementById( "sourcecode-wrap" ).addEventListener( "change", function( e ) {
 	document.getElementById( "source-code" ).classList.toggle( "sourcecode-wrap" );
 }, false );
 
-const URL = "demo-table.html";
-getHtml( URL );
+// Selecthor instance
+var sel = new Selecthor( document.getElementById( "import-target" ) );
+sel.fetch( "demo-table.html" );
+
+document.getElementById( "selector-input" ).addEventListener( "input", function( e ) {
+	sel.select( e.target.value );
+}, false );
