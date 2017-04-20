@@ -1,0 +1,14 @@
+{
+  "name": "selecthor",
+  "version": "1.0.0",
+  "description": "A way to demo CSS selectors",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zach Leatherman",
+  "license": "MIT",
+  "dependencies": {
+    "highlight.js": "^9.10.0"
+  }
+}
