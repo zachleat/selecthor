@@ -110,6 +110,8 @@ document.getElementById( "sourcecode-wrap" ).addEventListener( "change", functio
 
 // Selecthor instance
 var sel = new Selecthor( document.getElementById( "import-target" ) );
+// sel.fetch( "demo-definition-list.html" );
+// sel.fetch( "demo-list-without-list.html" );
 sel.fetch( "demo-table.html" );
 
 document.getElementById( "selector-input" ).addEventListener( "input", function( e ) {
