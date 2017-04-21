@@ -1,6 +1,6 @@
 # selecthor
 
-A way to test, learn, and demo CSS Selectors.
+A proof of concept project to show a way to test, learn, and demo CSS Selectors.
 
 ## Live Demo
 
