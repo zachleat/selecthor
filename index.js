@@ -103,6 +103,14 @@ Selecthor.prototype.select = function( selector ) {
 	this.updateCount( count );
 };
 
+// Cut the mustard
+if( !( "fetch" in window ) ) {
+	throw "The Fetch API is required for Selecthor http://caniuse.com/#feat=fetch";
+}
+if( !( "querySelectorAll" in document ) ) {
+	throw new Error( "Native querySelectorAll is required for Selecthor http://caniuse.com/#feat=queryselector" );
+}
+
 // Wrap source code checkbox
 document.getElementById( "sourcecode-wrap" ).addEventListener( "change", function( e ) {
 	document.getElementById( "source-code" ).classList.toggle( "sourcecode-wrap" );
