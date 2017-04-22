@@ -9,3 +9,4 @@ A proof of concept project to show a way to test, learn, and demo CSS Selectors.
 ## Intro Video
 
 [![Learn, Test, and Demo CSS Selectors](docs/youtube-preview.jpg)](https://www.youtube.com/watch?v=CwZniQc0zg0)
+[https://www.youtube.com/watch?v=CwZniQc0zg0](https://www.youtube.com/watch?v=CwZniQc0zg0)
