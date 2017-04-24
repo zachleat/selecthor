@@ -76,7 +76,7 @@ pre {
 	line-height: 2.5;
 }
 .match {
-	background-color: red;
+	background-color: #900;
 }
 .hljs-tag {
 	transition: background-color .4s;
