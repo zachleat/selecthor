@@ -78,6 +78,9 @@ pre {
 .match {
 	background-color: #900;
 }
+.hljs {
+	overflow-x: initial;
+}
 .hljs-tag {
 	transition: background-color .4s;
 }
